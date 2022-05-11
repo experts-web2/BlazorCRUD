@@ -1,5 +1,6 @@
 ﻿@page "/createemployee"
 @using BlazorCRUD.Data
+@using BlazorCRUD.Enums
 
 <h1>Create Employee "@_employeeToCreate.Name"</h1>
 
@@ -28,9 +29,20 @@
     </div>
     <ValidationMessage For="@(() => _employeeToCreate.Department)" />
 
-        <div class="form-group nb-3">
+    @*<div class="form-group nb-3">
         <label for="postTitle">Gender</label>
         <InputText @bind-Value="_employeeToCreate.Gender" class="form-control" id=postGender>Gender</InputText>
+    </div>
+    <ValidationMessage For="@(() => _employeeToCreate.Gender)" />*@
+
+    <div class="form-group nb-3">
+        <label for="postTitle">Gender</label>
+        <InputSelect class="form-control" required @bind-Value="_employeeToCreate.Gender">
+            @foreach (var value in Enum.GetValues(typeof(GenderEnum)))
+            {
+                <option value="@value">@value</option>
+            }
+        </InputSelect>
     </div>
     <ValidationMessage For="@(() => _employeeToCreate.Gender)" />
 
@@ -57,7 +69,7 @@
         Name = "Employee Name",
         City = "Employee City",
         Department = "Employee Department",
-        Gender = "Employee Gender"
+        Gender = GenderEnum.Male
     };
 
     private async Task CreateNewEmployee()

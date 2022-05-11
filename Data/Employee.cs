@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using BlazorCRUD.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace BlazorCRUD.Data
 {
@@ -16,6 +17,6 @@ namespace BlazorCRUD.Data
         public string Department { get; set; } = null!;
 
         [Required]
-        public string Gender { get; set; } = null!;
+        public GenderEnum Gender { get; set; }
     }
 }
