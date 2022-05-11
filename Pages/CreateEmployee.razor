@@ -1,0 +1,74 @@
+﻿@page "/createemployee"
+@using BlazorCRUD.Data
+
+<h1>Create Employee "@_employeeToCreate.Name"</h1>
+
+<EditForm Model="_employeeToCreate" OnValidSubmit="CreateNewEmployee">
+    <div class="form-group nb-3">
+        <label for="postTitle">Employee Name</label>
+        <InputText @bind-Value="_employeeToCreate.Name" class="form-control" id=postTitle>Title</InputText>
+    </div>
+    <ValidationMessage For="@(() => _employeeToCreate.Name)" />
+
+    <div class="form-group nb-3">
+        <label for="postTitle">City</label>
+        <InputSelect class="form-control" @bind-Value="_employeeToCreate.City">
+            <option value="--Select City--">--Select City--</option>
+            @foreach (var city in cityList)
+            {
+                <option value="@city.CityName">@city.CityName</option>
+            }
+        </InputSelect>
+    </div>
+    <ValidationMessage For="@(() => _employeeToCreate.City)" />
+
+    <div class="form-group nb-3">
+        <label for="postTitle">Department</label>
+        <InputText @bind-Value="_employeeToCreate.Department" class="form-control" id=postDepartment>Department</InputText>
+    </div>
+    <ValidationMessage For="@(() => _employeeToCreate.Department)" />
+
+        <div class="form-group nb-3">
+        <label for="postTitle">Gender</label>
+        <InputText @bind-Value="_employeeToCreate.Gender" class="form-control" id=postGender>Gender</InputText>
+    </div>
+    <ValidationMessage For="@(() => _employeeToCreate.Gender)" />
+
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <button class="btn btn-success" type="submit">Save</button>
+    <button @onclick="@(() => NavigationManager.NavigateTo("/"))" class="btn btn-secondary">Cancel</button>
+</EditForm>
+
+
+@code {
+    [Inject] AppDbContext AppDbContext { get; set; }
+    [Inject] NavigationManager NavigationManager { get; set; }
+    protected List<City> cityList = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetCityList();
+    }
+
+    private Employee _employeeToCreate = new Employee
+    {
+        Name = "Employee Name",
+        City = "Employee City",
+        Department = "Employee Department",
+        Gender = "Employee Gender"
+    };
+
+    private async Task CreateNewEmployee()
+    {
+        await AppDbContext.Employees.AddAsync(_employeeToCreate);
+        await AppDbContext.SaveChangesAsync();
+        NavigationManager.NavigateTo("/");
+    }
+
+    protected async Task GetCityList()
+    {
+        cityList = AppDbContext.Cities.ToList<City>();
+    }
+}
